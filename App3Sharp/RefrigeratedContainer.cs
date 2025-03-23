@@ -1,27 +1,34 @@
 ﻿namespace App3Sharp;
 
-public class RefrigeratedContainer : Container
+public class RefrigeratedContainer : Container, IHazardNotifier
 {
-    public double CargoMass { get; set; } // Маса вантажу
-    public double MaxCargoWeight { get; set; } // Максимальна вага вантажу в холодильнику
+    public double temperature { get; set; } // Маса вантажу
 
-    public RefrigeratedContainer(double height, double depth, double width, double mass, double maxPayload, double cargoMass)
-        : base(height, depth, width, mass, maxPayload, "C")
+    public RefrigeratedContainer(double height, double depth, double width, double tareWeight, double maxPayload, double temperature)
+        : base(height, depth, width,  tareWeight, maxPayload, "C")
     {
-        CargoMass = cargoMass;
-        MaxCargoWeight = maxPayload;
+        this.temperature = temperature;
+
     }
 
     public override void LoadCargo(double mass)
     {
-        if (CargoMass + mass > MaxCargoWeight)
+        if (CurrentCargo + mass > MaxPayload)
+        {
+            Notification();
             throw new Exception("OverfillException: Cargo exceeds container capacity.");
-        CargoMass += mass;
+        }
+
+        CurrentCargo += mass;
     }
 
     public override void PrintInfo()
     {
         base.PrintInfo();
-        Console.WriteLine($"Cargo Mass: {CargoMass} kg, Max Cargo Weight: {MaxCargoWeight} kg");
+        Console.WriteLine($"Cargo Mass: {CurrentCargo} kg, Max Cargo Weight: {MaxPayload} kg, Temperature: {temperature} C");
+    }
+    public void Notification()
+    {
+        Console.WriteLine("Overload exeption in Frige Happened ");
     }
 }

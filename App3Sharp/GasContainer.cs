@@ -1,11 +1,11 @@
 ﻿namespace App3Sharp;
 
-public class GasContainer : Container
+public class GasContainer : Container, IHazardNotifier
 {
-    public double Pressure { get; set; } // Тиск у контейнері (в атмосферах)
+    public double Pressure { get; set; } 
 
-    public GasContainer(double height, double depth, double width, double mass, double maxPayload, double pressure)
-        : base(height, depth, width, mass, maxPayload, "G")
+    public GasContainer(double height, double depth, double width, double tareWeight, double maxPayload, double pressure)
+        : base(height, depth, width, tareWeight, maxPayload, "G")
     {
         Pressure = pressure;
     }
@@ -13,7 +13,11 @@ public class GasContainer : Container
     public override void LoadCargo(double mass)
     {
         if (CurrentCargo + mass > MaxPayload)
+        {
+            Notification();
             throw new Exception("OverfillException: Cargo exceeds container capacity.");
+        }
+
         CurrentCargo += mass;
     }
     public override void PrintInfo()
@@ -21,4 +25,11 @@ public class GasContainer : Container
         base.PrintInfo();
         Console.WriteLine($"Pressure: {Pressure} atm");
     }
+
+    public void Notification()
+    {
+        Console.WriteLine("Overload exeption in Gas Happened ");
+    }
+    
+    
 }
